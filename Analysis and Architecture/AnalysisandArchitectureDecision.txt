@@ -16,7 +16,8 @@ Things that can go wrong:
 
 
 
-
-
-
-Angular JS is the framework we are going to use. Most of our team has had some experience with Python so we are welcoming the challenge of working with the limited resources for Angular 2.0. We do not want to use Angular 1.x because most of us have no real experience with JavaScript and we believe it would be more beneficial learning the latest version.
+Angular JS is the framework we are going to use. 
+Most of our team has had some experience with Python so we are welcoming the challenge 
+of working with the limited resources for Angular 2.0. We do not want to use Angular 1.x 
+because most of us have no real experience with JavaScript and we believe it would be more 
+beneficial learning the latest version.
