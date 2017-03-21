@@ -1,0 +1,62 @@
+body {
+    background-image: url(space.jpg);
+    background-position: center;
+    background-size: cover;
+}
+
+h1 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /*background-color: #89999D;*/
+    color: #FCFBF7;
+    padding: 1em;
+    padding-bottom: 3px;
+    clear: left;
+    text-align: center;
+}
+
+form {
+    text-align: center;
+    font-family: Geneva;
+    font-size: 16px;
+    color: #FCFBF7;
+}
+
+.button {
+    background-color: palevioletred;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+nav {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    float: left;
+    width: 25%;
+    height: 100%;
+    padding: 1em;
+    background-color: #89999D;
+    text-align: center;
+}
+
+div {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-left: 30%;
+    height: 100%;
+    padding: 1em;
+    overflow: hidden;
+    background-color: #FCFBF7;
+    border: 5px solid;
+    border-color: #89999D;
+}
+
+ul {
+    list-style-type: circle;
+}
+
+div.center {
+    text-align: center;
+}
