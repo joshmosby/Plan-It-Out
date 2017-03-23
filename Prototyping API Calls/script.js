@@ -14,12 +14,9 @@ function makeRequest(query) {
         console.log(response);
         var events = response.events;
         var eventsString = '';
-        //console.log("Entering loop");
         events.forEach(function(event) {
-            //console.log("in loop");
             eventsString += (event.name.text + "<br>");
         });
-        //console.log("out of loop");
         if (eventsString == '') {
             console.log("no events");
             eventsString = "Sorry, no events matching " + query;
