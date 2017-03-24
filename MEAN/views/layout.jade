@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    title Paypal File Upload Vulnerability
+           
+          
+    link(rel='html', href='upload.html', type='html')
+       
+  body
+    form#my_form(method='post', enctype='multipart/form-data', action='/')
+      input(type='file', name='filefield', id='uploadFile')
+      br
+      |         
+      input(type='image', src='images/paynow.png', name = 'submit', border='0', onclick='encrypt_name()')
+    #showdata
+    script(src='bower_components/jquery/dist/jquery.min.js')
+    script(src='bower_components/crypto-js/src/enc-base64.js')
+    script(src='javascripts/crypt.js')
+    
+
+    
+   
+
+      
