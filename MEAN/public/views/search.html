@@ -15,6 +15,11 @@
     <button type="button" class="list-group-item" ng-repeat="event in searchResults.events">{{event.name.text}}</button>
 </div>
 
+<div class="jumbotron text-center" ng-show="isLoading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading....</p>
+</div>
+
 <div class="row show-hide-message" ng-show="isError">
     <div class="alert alert-danger">{{ errorMessage }}</div>
 </div>
