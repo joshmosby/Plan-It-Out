@@ -4,16 +4,13 @@
     <p>{{ 'Find an event near you.' }}</p>
 
     <div class="form-group">
+        <input type="text" class="form-control" name="name" ng-model="inputLocation" placeholder="Enter your location">
+    </div>
+    <div class="form-group">
         <input type="text" class="form-control" name="name" ng-model="searchQuery" placeholder="Search for an event">
         <button ng-click="SearchFunction()" type="submit" class="btn btn-success btn-lg">Search</button>
-        <br/>
-        <br>
     </div>
 </div>
-<div>
-    <ul>
-        <li ng-repeat="event in searchResults.events track by $index"><a href="#">{{event.name.text}}</a></li>
-        <!-- track by $index fixes problem of repeated values in array -->
-    </ul>
+<div class="list-group">
+    <button type="button" class="list-group-item" ng-repeat="event in searchResults.events">{{event.name.text}}</button>
 </div>
-

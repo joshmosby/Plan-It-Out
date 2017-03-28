@@ -8,8 +8,13 @@ module.exports = function (app) {
 
         var options = {
             method: 'GET',
-            url: 'http://www.eventbriteapi.com/v3/events/search/',
-            qs: {q: req.headers.query, token: 'MIOBXG4I3HB2ZH7IZINI'}
+            url: 'https://www.eventbriteapi.com/v3/events/search/',
+            qs: {
+                q: req.headers.query,
+                sort_by: 'date',
+                'location.address': req.headers.location,
+                token: 'MIOBXG4I3HB2ZH7IZINI'
+            }
         };
 
         request(options, function (error, response, body) {

@@ -3,11 +3,13 @@ angular.module('SearchCtrl', []).controller('SearchController', ['$scope', '$htt
     $scope.searchResults = {};
     $scope.SearchFunction = function () {
         var query = $scope.searchQuery;
+        var location = $scope.inputLocation;
         $http({
             method: 'GET',
             url: '/api/search',
             headers: {
-                'query': query
+                'query': query,
+                'location': location
             }
         }).then(function successCallback(success) {
             $scope.searchResults = success.data;
