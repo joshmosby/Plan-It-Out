@@ -5,30 +5,38 @@ angular.module('SearchCtrl', []).controller('SearchController', ['$scope', '$htt
     $scope.errorMessage = "";
     $scope.isError = false;
     $scope.isLoading = false;
+    $scope.selectedCategory = 'All categories';
+    $scope.noResults = false;
 
     $scope.SearchFunction = function () {
         $scope.searchResults = {};
+        $scope.noResults = false;
         var query = $scope.searchQuery;
         var location = $scope.inputLocation;
+        var category = $scope.selectedCategory;
         if ((query === "" || query === null) && (location === "" || location === null)) {
             $scope.isError = true;
-            $scope.errorMessage = "Please enter either a location or event."
+            $scope.errorMessage = 'Please enter either a location or event.';
             $scope.isLoading = false;
         } else {
-            $scope.isLoading = true;
-            $scope.errorMessage = "";
-            console.log("query: " + query);
             $scope.isError = false;
+            $scope.errorMessage = "";
+            $scope.isLoading = true;
             $http({
                 method: 'GET',
                 url: '/api/search',
                 headers: {
                     'query': query,
-                    'location': location
+                    'location': location,
+                    'category': category
                 }
             }).then(function successCallback(success) {
                 $scope.isLoading = false;
                 $scope.searchResults = success.data;
+                if (success.data.events.length === 0) {
+                    $scope.noResults = true;
+                    $scope.errorMessage = 'No events found.';
+                }
                 console.log(success);
             }, function errorCallback(error) {
                 $scope.isLoading = false;
@@ -36,4 +44,13 @@ angular.module('SearchCtrl', []).controller('SearchController', ['$scope', '$htt
             });
         }
     };
+
+    $scope.ChangeCategory = function (category) {
+        $scope.selectedCategory = category;
+    };
+
+    /*$('.dropdown-categories li > a').click(function () {
+     console.log(this.innerHTML);
+     $scope.ChangeCategory(this.innerHTML);
+     });*/
 }]);
