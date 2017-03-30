@@ -1,36 +1,16 @@
+var Search = require('./models/search');
+
 module.exports = function (app) {
 
     // server routes ===========================================================
     // handle things like api calls
     // authentication routes
     app.get('/api/search', function (req, res) {
-        var categories = {
-            'All categories': '',
-            'Music': 103,
-            'Business & Professional': 101,
-            'Food & Drink': 110,
-            'Community & Culture': 113,
-            'Performing & Visual Arts': 105,
-            'Film, Media & Entertainment': 104,
-            'Sports & Fitness': 108,
-            'Health & Wellness': 107,
-            'Science & Technology': 102,
-            'Travel & Outdoor': 109,
-            'Charity & Causes': 111,
-            'Religion & Spirituality': 114,
-            'Family & Education': 115,
-            'Seasonal & Holiday': 116,
-            'Government & Politics': 112,
-            'Fashion & Beauty': 106,
-            'Home & Lifestyle': 117,
-            'Auto, Boat & Air': 118,
-            'Hobbies & Special Interest': 119,
-            'Other': 199
-        };
+        var searchData = new Search();
         var category = req.headers.category;
-        var categoryId = categories[category];
+        var categoryId = searchData.getCategoryId(category);
 
-        var request = require("request");
+        var request = require('request');
 
         var options = {
             method: 'GET',
@@ -44,10 +24,16 @@ module.exports = function (app) {
             }
         };
 
+        searchData.query = req.headers.query;
+        searchData.location = req.headers.location;
+        searchData.category = category;
+
         request(options, function (error, response, body) {
             if (error) {
                 throw new Error(error);
             }
+            searchData.results = body;
+            searchData.save();
             res.send(body);
         });
     });
