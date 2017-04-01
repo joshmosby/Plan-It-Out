@@ -9,28 +9,28 @@ var SearchSchema = new Schema({
 });
 
 SearchSchema.methods.getCategoryId = function (category) {
-    var categoryList = {
-        'All categories': '',
-        'Music': 103,
-        'Business & Professional': 101,
-        'Food & Drink': 110,
-        'Community & Culture': 113,
-        'Performing & Visual Arts': 105,
-        'Film, Media & Entertainment': 104,
-        'Sports & Fitness': 108,
-        'Health & Wellness': 107,
-        'Science & Technology': 102,
-        'Travel & Outdoor': 109,
-        'Charity & Causes': 111,
-        'Religion & Spirituality': 114,
-        'Family & Education': 115,
-        'Seasonal & Holiday': 116,
-        'Government & Politics': 112,
-        'Fashion & Beauty': 106,
-        'Home & Lifestyle': 117,
-        'Auto, Boat & Air': 118,
-        'Hobbies & Special Interest': 119,
-        'Other': 199
+    const categoryList = {
+        'all categories': '',
+        'music': 103,
+        'business & professional': 101,
+        'food & drink': 110,
+        'community & culture': 113,
+        'performing & visual arts': 105,
+        'film, media & entertainment': 104,
+        'sports & fitness': 108,
+        'health & wellness': 107,
+        'science & technology': 102,
+        'travel & outdoor': 109,
+        'charity & causes': 111,
+        'religion & spirituality': 114,
+        'family & education': 115,
+        'seasonal & holiday': 116,
+        'government & politics': 112,
+        'fashion & beauty': 106,
+        'home & lifestyle': 117,
+        'auto, boat & air': 118,
+        'hobbies & special interest': 119,
+        'other': 199
     };
     return categoryList[category];
 };
