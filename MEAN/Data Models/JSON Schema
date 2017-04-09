@@ -1,0 +1,11 @@
+var Schema = mongoose.Schema;
+
+// Our JSON Schema consists of only query information to make repeated searches faster. 
+// We require all four of the fields and they are in thde String format. They are all keys.
+
+var SearchSchema = new Schema({
+    query: { type: String },
+    location: { type: String },
+    category: { type: String },
+    results: { type: String }
+});
