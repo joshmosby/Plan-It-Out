@@ -44,7 +44,7 @@ module.exports = function (app) {
                         sort_by: 'date',
                         'location.address': searchLocation,
                         categories: categoryId,
-                        token: 'MIOBXG4I3HB2ZH7IZINI'
+                        token: ''
                     }
                 };
 
