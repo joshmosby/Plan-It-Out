@@ -1,14 +1,19 @@
 <div class="jumbotron text-center">
+    <!-- TITLE TEXT -->
     <h1>Search</h1>
-
     <p>Find an event near you.</p>
 
+    <!-- ENTER LOCATION -->
     <div class="form-group">
         <input type="text" class="form-control" name="name" ng-model="inputLocation" placeholder="Enter your location">
     </div>
+
+    <!-- ENTER EVENT NAME -->
     <div class="form-group">
         <input type="text" class="form-control" name="name" ng-model="searchQuery" placeholder="Search for an event">
     </div>
+
+    <!-- CATEGORY DROPDOWN MENU -->
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
@@ -16,47 +21,33 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-categories" aria-labelledby="dropdownMenu1">
-            <li ng-click="ChangeCategory('All categories')"><a>All categories</a></li>
-            <li role="separator" class="divider"></li>
-            <li ng-click="ChangeCategory('Music')"><a>Music</a></li>
-            <li ng-click="ChangeCategory('Business & Professional')"><a>Business & Professional</a></li>
-            <li ng-click="ChangeCategory('Food & Drink')"><a>Food & Drink</a></li>
-            <li ng-click="ChangeCategory('Community & Culture')"><a>Community & Culture</a></li>
-            <li ng-click="ChangeCategory('Performing & Visual Arts')"><a>Performing & Visual Arts</a></li>
-            <li ng-click="ChangeCategory('Film, Media & Entertainment')"><a>Film, Media & Entertainment</a></li>
-            <li ng-click="ChangeCategory('Sports & Fitness')"><a>Sports & Fitness</a></li>
-            <li ng-click="ChangeCategory('Health & Wellness')"><a>Health & Wellness</a></li>
-            <li ng-click="ChangeCategory('Science & Technology')"><a>Science & Technology</a></li>
-            <li ng-click="ChangeCategory('Travel & Outdoor')"><a>Travel & Outdoor</a></li>
-            <li ng-click="ChangeCategory('Charity & Causes')"><a>Charity & Causes</a></li>
-            <li ng-click="ChangeCategory('Religion & Spirituality')"><a>Religion & Spirituality</a></li>
-            <li ng-click="ChangeCategory('Seasonal & Holiday')"><a>Seasonal & Holiday</a></li>
-            <li ng-click="ChangeCategory('Government & Politics')"><a>Government & Politics</a></li>
-            <li ng-click="ChangeCategory('Fashion & Beauty')"><a>Fashion & Beauty</a></li>
-            <li ng-click="ChangeCategory('Home & Lifestyle')"><a>Home & Lifestyle</a></li>
-            <li ng-click="ChangeCategory('Auto, Boat & Air')"><a>Auto, Boat & Air</a></li>
-            <li ng-click="ChangeCategory('Hobbies & Special Interest')"><a>Hobbies & Special Interest</a></li>
-            <li role="separator" class="divider"></li>
-            <li ng-click="ChangeCategory('Other')"><a>Other</a></li>
+            <li ng-repeat="cat in categoryList" ng-click="ChangeCategory(cat)"><a>{{cat}}</a></li>
         </ul>
     </div>
+
+    <!-- SEARCH BUTTON -->
     <div class="form-group">
         <button ng-click="SearchFunction()" type="submit" class="btn btn-success btn-lg status">Search</button>
     </div>
 </div>
+
+<!-- SEARCH RESULTS FROM EVENTBRITE -->
 <div class="list-group">
     <button type="button" class="list-group-item" ng-repeat="event in searchResults.events">{{event.name.text}}</button>
 </div>
 
+<!-- LOADING BOX -->
 <div class="jumbotron text-center" ng-show="isLoading">
     <span class="glyphicon glyphicon-repeat spinner"></span>
     <p>Loading....</p>
 </div>
 
+<!-- ERROR MESSAGE -->
 <div class="row show-hide-message" ng-show="isError">
     <div class="alert alert-danger">{{ errorMessage }}</div>
 </div>
 
+<!-- NO RESULTS MESSAGE -->
 <div class="row show-hide-message" ng-show="noResults">
     <div class="alert alert-warning">{{ errorMessage }}</div>
 </div>
