@@ -33,6 +33,11 @@ module.exports = function (app) {
                 // There were no matches
                 console.log('Searching Eventbrite');
 
+                // Read token from file
+                var fs = require('fs');
+                var obj = JSON.parse(fs.readFileSync('app/token.json', 'utf8'));
+                var token = obj.token;
+
                 // HTTP Request to Eventbrite API
                 var request = require('request');
 
@@ -44,7 +49,7 @@ module.exports = function (app) {
                         sort_by: 'date',
                         'location.address': searchLocation,
                         categories: categoryId,
-                        token: ''
+                        token: token
                     }
                 };
 
