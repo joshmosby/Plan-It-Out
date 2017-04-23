@@ -1,5 +1,16 @@
-angular.module('MainCtrl', []).controller('MainController', function($scope) {
+angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', '$window', function($scope, $http, $window) {
 
-	$scope.tagline = 'Find events that fit into your free time.';
+    $scope.tagline = 'Find events that fit into your free time.';
 
-});
+    $scope.SignInWithGoogle = function () {
+        $http({
+            method: 'GET',
+            url: 'api/auth/google/code'
+        }).then(function successCallback(success) {
+            console.log(success);
+            $window.location = success.data;
+        }, function errorCallback(error) {
+            console.log(error);
+        })
+    }
+}]);

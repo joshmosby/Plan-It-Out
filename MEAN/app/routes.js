@@ -1,4 +1,8 @@
 var Search = require('./models/search');
+var fs = require('fs');
+var request = require('request');
+var google = require('googleapis');
+
 
 module.exports = function (app) {
 
@@ -34,13 +38,10 @@ module.exports = function (app) {
                 console.log('Searching Eventbrite');
 
                 // Read token from file
-                var fs = require('fs');
-                var obj = JSON.parse(fs.readFileSync('app/token.json', 'utf8'));
-                var token = obj.token;
+                var obj = JSON.parse(fs.readFileSync('app/config.json', 'utf8'));
+                var token = obj.eventbrite.token;
 
                 // HTTP Request to Eventbrite API
-                var request = require('request');
-
                 var options = {
                     method: 'GET',
                     url: 'https://www.eventbriteapi.com/v3/events/search/',
@@ -68,6 +69,81 @@ module.exports = function (app) {
             }
         });
     });
+
+    var OAuth2 = google.auth.OAuth2;
+
+    // Read google config data from file
+    var obj = JSON.parse(fs.readFileSync('app/config.json', 'utf8'));
+    var client_id = obj.google.client_id;
+    var client_secret = obj.google.client_secret;
+    var redirect_url = obj.google.redirect_url;
+
+    var oauth2Client = new OAuth2(
+        client_id,
+        client_secret,
+        redirect_url
+    );
+
+    var scopes = [
+        'https://www.googleapis.com/auth/calendar'
+    ];
+
+    var url = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: scopes
+    });
+
+    app.get('/api/auth/google/code', function (req, res) {
+        console.log('signing in with google');
+        console.log(url);
+        res.send(url);
+    });
+
+    app.get('/api/auth/google/token', function (req, res) {
+        var code = req.headers.code.trim().replace('%2F', '/'); // This is what was causing it to not work
+        if (code !== null) {
+            console.log(code);
+
+            oauth2Client.getToken(code, function (err, tokens) {
+                if (err) {
+                    console.log(err);
+                    res.send(err);
+                    return;
+                }
+                console.log(tokens);
+                if (!err) {
+                    oauth2Client.setCredentials(tokens);
+                    var calendar = google.calendar('v3');
+                    calendar.events.list({
+                        auth: oauth2Client,
+                        calendarId: 'primary',
+                        timeMin: (new Date()).toISOString(),
+                        maxResults: 10,
+                        singleEvents: true,
+                        orderBy: 'startTime'
+                    }, function (err, response) {
+                        if (err) {
+                            console.log('The API returned an error: ' + err);
+                            return;
+                        }
+                        var events = response.items;
+                        if (events.length === 0) {
+                            console.log('No upcoming events found.');
+                        } else {
+                            console.log('Upcoming 10 events:');
+                            for (var i = 0; i < events.length; i++) {
+                                var event = events[i];
+                                var start = event.start.dateTime || event.start.date;
+                                console.log('%s - %s', start, event.summary);
+                            }
+                        }
+                    });
+                    res.send(tokens);
+                }
+            })
+        }
+    });
+
 
     // frontend routes =========================================================
     // route to handle all angular requests
