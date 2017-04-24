@@ -93,6 +93,8 @@ module.exports = function (app) {
         scope: scopes
     });
 
+    var googleTokens;
+
     app.get('/api/auth/google/code', function (req, res) {
         console.log('signing in with google');
         console.log(url);
@@ -138,12 +140,48 @@ module.exports = function (app) {
                             }
                         }
                     });
+                    googleTokens = tokens;
                     res.send(tokens);
                 }
             })
         }
     });
 
+    app.get('/api/auth/google/insert', function (req, res) {
+        //var tokens = req.headers.tokens;
+        var summary = 'event summary';//req.headers.summary;
+        var location = 'event location';//req.headers.description;
+        var description = 'event description';//req.headers.description;
+        var dateTimeStart = '2017-04-24T19:00:00-04:00';//req.headers.dateTime;
+        var dateTimeEnd = '2017-04-24T19:00:00-06:00';//req.headers.dateTime;
+        var timeZone = 'America/New_York';//req.headers.dateTime;
+        var event = {
+            'summary': summary,
+            'location': location,
+            'description': description,
+            'start': {
+                'dateTime': dateTimeStart,
+                'timeZone': timeZone
+            },
+            'end': {
+                'dateTime': dateTimeEnd,
+                'timeZone': timeZone
+            }
+        };
+        oauth2Client.setCredentials(googleTokens);
+        var calendar = google.calendar('v3');
+        calendar.events.insert({
+            auth: oauth2Client,
+            calendarId: 'primary',
+            resource: event
+        }, function (err, event) {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+            }
+            console.log('Event created: %s', event.htmlLink);
+        })
+    });
 
     // frontend routes =========================================================
     // route to handle all angular requests
