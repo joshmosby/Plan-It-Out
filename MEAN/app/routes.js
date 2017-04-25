@@ -2,6 +2,8 @@ var Search = require('./models/search');
 var fs = require('fs');
 var request = require('request');
 var google = require('googleapis');
+var calendar = google.calendar('v3');
+var plus = google.plus('v1');
 
 
 module.exports = function (app) {
@@ -85,6 +87,7 @@ module.exports = function (app) {
     );
 
     var scopes = [
+        'https://www.googleapis.com/auth/plus.me',
         'https://www.googleapis.com/auth/calendar'
     ];
 
@@ -115,7 +118,6 @@ module.exports = function (app) {
                 console.log(tokens);
                 if (!err) {
                     oauth2Client.setCredentials(tokens);
-                    var calendar = google.calendar('v3');
                     calendar.events.list({
                         auth: oauth2Client,
                         calendarId: 'primary',
@@ -138,6 +140,17 @@ module.exports = function (app) {
                                 var start = event.start.dateTime || event.start.date;
                                 console.log('%s - %s', start, event.summary);
                             }
+                        }
+                    });
+                    plus.people.get({
+                        userId: 'me',
+                        auth: oauth2Client
+                    }, function (err, user) {
+                        if (err) {
+                            console.log('The API returned an error: ' + err);
+                            return;
+                        } else {
+                            console.log('googleplus: ' + user.id);
                         }
                     });
                     googleTokens = tokens;
@@ -168,8 +181,7 @@ module.exports = function (app) {
                 'timeZone': timeZone
             }
         };
-        oauth2Client.setCredentials(googleTokens);
-        var calendar = google.calendar('v3');
+        /*oauth2Client.setCredentials(googleTokens);
         calendar.events.insert({
             auth: oauth2Client,
             calendarId: 'primary',
@@ -180,7 +192,7 @@ module.exports = function (app) {
                 return;
             }
             console.log('Event created: %s', event.htmlLink);
-        })
+        })*/
     });
 
     // frontend routes =========================================================
