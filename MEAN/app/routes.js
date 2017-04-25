@@ -1,4 +1,5 @@
 var Search = require('./models/search');
+var User = require('./models/user');
 var fs = require('fs');
 var request = require('request');
 var google = require('googleapis');
@@ -107,60 +108,61 @@ module.exports = function (app) {
     app.get('/api/auth/google/token', function (req, res) {
         var code = req.headers.code.trim().replace('%2F', '/'); // This is what was causing it to not work
         if (code !== null) {
-            console.log(code);
-
             oauth2Client.getToken(code, function (err, tokens) {
                 if (err) {
                     console.log(err);
                     res.send(err);
                     return;
                 }
-                console.log(tokens);
-                if (!err) {
-                    oauth2Client.setCredentials(tokens);
-                    calendar.events.list({
-                        auth: oauth2Client,
-                        calendarId: 'primary',
-                        timeMin: (new Date()).toISOString(),
-                        maxResults: 10,
-                        singleEvents: true,
-                        orderBy: 'startTime'
-                    }, function (err, response) {
-                        if (err) {
-                            console.log('The API returned an error: ' + err);
-                            return;
-                        }
-                        var events = response.items;
-                        if (events.length === 0) {
-                            console.log('No upcoming events found.');
-                        } else {
-                            console.log('Upcoming 10 events:');
-                            for (var i = 0; i < events.length; i++) {
-                                var event = events[i];
-                                var start = event.start.dateTime || event.start.date;
-                                console.log('%s - %s', start, event.summary);
-                            }
-                        }
-                    });
-                    plus.people.get({
-                        userId: 'me',
-                        auth: oauth2Client
-                    }, function (err, user) {
-                        if (err) {
-                            console.log('The API returned an error: ' + err);
-                            return;
-                        } else {
-                            console.log('googleplus: ' + user.id);
-                        }
-                    });
-                    googleTokens = tokens;
-                    res.send(tokens);
-                }
+                oauth2Client.setCredentials(tokens);
+                plus.people.get({
+                    userId: 'me',
+                    auth: oauth2Client
+                }, function (err, user) {
+                    if (err) {
+                        console.log('The Google+ API returned an error: ' + err);
+                        res.send(err);
+                        return;
+                    }
+                    var userData = new User();
+                    userData.id = user.id;
+                    userData.save();
+                });
+                googleTokens = tokens;
+                res.send(tokens);
             })
         }
     });
 
-    app.get('/api/auth/google/insert', function (req, res) {
+    app.get('api/google/events', function (req, res) {
+        oauth2Client.setCredentials(tokens);
+        calendar.events.list({
+            auth: oauth2Client,
+            calendarId: 'primary',
+            timeMin: (new Date()).toISOString(),
+            maxResults: 10,
+            singleEvents: true,
+            orderBy: 'startTime'
+        }, function (err, response) {
+            if (err) {
+                console.log('The Calendar API returned an error: ' + err);
+                return;
+            }
+            var events = response.items;
+            if (events.length === 0) {
+                console.log('No upcoming events found.');
+            } else {
+                console.log('Upcoming 10 events:');
+                for (var i = 0; i < events.length; i++) {
+                    var event = events[i];
+                    var start = event.start.dateTime || event.start.date;
+                    console.log('%s - %s', start, event.summary);
+                }
+            }
+        });
+    });
+
+    app.get('/api/google/insert', function (req, res) {
         //var tokens = req.headers.tokens;
         var summary = 'event summary';//req.headers.summary;
         var location = 'event location';//req.headers.description;
@@ -182,17 +184,17 @@ module.exports = function (app) {
             }
         };
         /*oauth2Client.setCredentials(googleTokens);
-        calendar.events.insert({
-            auth: oauth2Client,
-            calendarId: 'primary',
-            resource: event
-        }, function (err, event) {
-            if (err) {
-                console.log('There was an error contacting the Calendar service: ' + err);
-                return;
-            }
-            console.log('Event created: %s', event.htmlLink);
-        })*/
+         calendar.events.insert({
+         auth: oauth2Client,
+         calendarId: 'primary',
+         resource: event
+         }, function (err, event) {
+         if (err) {
+         console.log('There was an error contacting the Calendar service: ' + err);
+         return;
+         }
+         console.log('Event created: %s', event.htmlLink);
+         })*/
     });
 
     // frontend routes =========================================================
