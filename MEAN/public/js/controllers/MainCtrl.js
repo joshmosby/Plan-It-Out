@@ -5,7 +5,7 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$http', 
     $scope.SignInWithGoogle = function () {
         $http({
             method: 'GET',
-            url: 'api/auth/google/code'
+            url: 'api/google/auth/code'
         }).then(function successCallback(success) {
             console.log(success);
             $window.location = success.data;

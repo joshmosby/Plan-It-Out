@@ -1,17 +1,33 @@
+// Models
 var Search = require('./models/search');
 var User = require('./models/user');
+
+// Libraries
 var fs = require('fs');
 var request = require('request');
 var google = require('googleapis');
 var calendar = google.calendar('v3');
 var plus = google.plus('v1');
 
+// Read google config data from file
+var obj = JSON.parse(fs.readFileSync('app/config.json', 'utf8'));
+var client_id = obj.google.client_id;
+var client_secret = obj.google.client_secret;
+var redirect_url = obj.google.redirect_url;
+
+// New OAuth object
+var OAuth2 = google.auth.OAuth2;
+var oauth2Client = new OAuth2(
+    client_id,
+    client_secret,
+    redirect_url
+);
+
+var googleTokens;
 
 module.exports = function (app) {
 
-    // server routes ===========================================================
-    // handle things like api calls
-    // authentication routes
+    // Search Eventbrite API
     app.get('/api/search', function (req, res) {
         // Get search parameters
         var searchQuery = req.headers.query.toLowerCase().trim();
@@ -73,65 +89,55 @@ module.exports = function (app) {
         });
     });
 
-    var OAuth2 = google.auth.OAuth2;
-
-    // Read google config data from file
-    var obj = JSON.parse(fs.readFileSync('app/config.json', 'utf8'));
-    var client_id = obj.google.client_id;
-    var client_secret = obj.google.client_secret;
-    var redirect_url = obj.google.redirect_url;
-
-    var oauth2Client = new OAuth2(
-        client_id,
-        client_secret,
-        redirect_url
-    );
-
-    var scopes = [
-        'https://www.googleapis.com/auth/plus.me',
-        'https://www.googleapis.com/auth/calendar'
-    ];
-
-    var url = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: scopes
-    });
-
-    var googleTokens;
-
-    app.get('/api/auth/google/code', function (req, res) {
-        console.log('signing in with google');
-        console.log(url);
+    // Send URL to redirect to Google Sign In
+    app.get('/api/google/auth/code', function (req, res) {
+        // Need Calendar to modify user's Google Calendar
+        // Need Google+ to keep track of individual users
+        var scopes = [
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/calendar'
+        ];
+        var url = oauth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: scopes
+        });
         res.send(url);
     });
 
-    app.get('/api/auth/google/token', function (req, res) {
+    // Get Google OAuth Token
+    app.get('/api/google/auth/token', function (req, res) {
         var code = req.headers.code.trim().replace('%2F', '/'); // This is what was causing it to not work
-        if (code !== null) {
-            oauth2Client.getToken(code, function (err, tokens) {
+        if (code === null) {
+            res.send('');
+            return;
+        }
+        // Get Google token
+        oauth2Client.getToken(code, function (err, tokens) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+                return;
+            }
+            // Authenticate with Google+
+            oauth2Client.setCredentials(tokens);
+            plus.people.get({
+                userId: 'me',
+                auth: oauth2Client
+            }, function (err, user) {
                 if (err) {
-                    console.log(err);
+                    console.log('The Google+ API returned an error: ' + err);
                     res.send(err);
                     return;
                 }
-                oauth2Client.setCredentials(tokens);
-                plus.people.get({
-                    userId: 'me',
-                    auth: oauth2Client
-                }, function (err, user) {
-                    if (err) {
-                        console.log('The Google+ API returned an error: ' + err);
-                        res.send(err);
-                        return;
-                    }
-                    var userData = new User();
-                    userData.id = user.id;
-                    userData.save();
-                });
-                googleTokens = tokens;
-                res.send(tokens);
-            })
-        }
+                // Save Google AccountID as a new User in database
+                var userData = new User();
+                userData.id = user.id;
+                userData.save();
+            });
+            // Return Google tokens
+            googleTokens = tokens;
+            res.send(tokens);
+        })
     });
 
     app.get('api/google/events', function (req, res) {
@@ -163,13 +169,12 @@ module.exports = function (app) {
     });
 
     app.get('/api/google/insert', function (req, res) {
-        //var tokens = req.headers.tokens;
-        var summary = 'event summary';//req.headers.summary;
-        var location = 'event location';//req.headers.description;
-        var description = 'event description';//req.headers.description;
-        var dateTimeStart = '2017-04-24T19:00:00-04:00';//req.headers.dateTime;
-        var dateTimeEnd = '2017-04-24T19:00:00-06:00';//req.headers.dateTime;
-        var timeZone = 'America/New_York';//req.headers.dateTime;
+        var summary = req.headers.summary;
+        var location = req.headers.location;
+        var description = req.headers.description;
+        var dateTimeStart = req.headers.start;
+        var dateTimeEnd = req.headers.end;
+        var timeZone = req.headers.timezone;
         var event = {
             'summary': summary,
             'location': location,
@@ -183,18 +188,20 @@ module.exports = function (app) {
                 'timeZone': timeZone
             }
         };
-        /*oauth2Client.setCredentials(googleTokens);
-         calendar.events.insert({
-         auth: oauth2Client,
-         calendarId: 'primary',
-         resource: event
-         }, function (err, event) {
-         if (err) {
-         console.log('There was an error contacting the Calendar service: ' + err);
-         return;
-         }
-         console.log('Event created: %s', event.htmlLink);
-         })*/
+        oauth2Client.setCredentials(googleTokens);
+        calendar.events.insert({
+            auth: oauth2Client,
+            calendarId: 'primary',
+            resource: event
+        }, function (err, event) {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                res.send(err);
+                return;
+            }
+            console.log('Event created: %s', event.htmlLink);
+            res.send(event.htmlLink);
+        })
     });
 
     // frontend routes =========================================================
