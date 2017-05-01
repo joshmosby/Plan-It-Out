@@ -31,12 +31,12 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
                 console.log('No upcoming events found.');
                 return;
             }
-            for (var i = events.length - 1; i >= 0; i--) {
+            for (var i = 0; i < events.length; i++) {
                 var event = events[i];
                 var start = event.start.dateTime.toString();
                 $scope.eventSources[0].events.push({
                     title: event.summary,
-                    start: start.substring(0, 10),
+                    start: start,
                     stick: true
                 })
             }
