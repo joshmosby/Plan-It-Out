@@ -33,10 +33,10 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             }
             for (var i = 0; i < events.length; i++) {
                 var event = events[i];
-                var start = event.start.dateTime.toString();
                 $scope.eventSources[0].events.push({
                     title: event.summary,
-                    start: start,
+                    start: event.start.dateTime.toString(),
+                    end: event.end.dateTime.toString(),
                     stick: true
                 })
             }
