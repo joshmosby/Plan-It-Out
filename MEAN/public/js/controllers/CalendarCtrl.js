@@ -1,12 +1,16 @@
 angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
 
-    $scope.eventSources = [];
+    $scope.eventSources = [
+        {
+            events: []
+        }
+    ];
 
     $scope.uiConfig = {
-        calendar:{
+        calendar: {
             height: 450,
             editable: true,
-            header:{
+            header: {
                 left: 'month basicWeek basicDay agendaWeek agendaDay',
                 center: 'title',
                 right: 'today prev,next'
@@ -15,6 +19,31 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             eventDrop: $scope.alertOnDrop,
             eventResize: $scope.alertOnResize
         }
+    };
+
+    var getCalendarEvents = function () {
+        $http({
+            method: 'GET',
+            url: '/api/google/events'
+        }).then(function successCallback(success) {
+            var events = success.data;
+            if (events.length === 0) {
+                console.log('No upcoming events found.');
+                return;
+            }
+            for (var i = events.length - 1; i >= 0; i--) {
+                var event = events[i];
+                var start = event.start.dateTime.toString();
+                $scope.eventSources[0].events.push({
+                    title: event.summary,
+                    start: start.substring(0, 10),
+                    stick: true
+                })
+            }
+
+        }, function errorCallback(error) {
+            console.log(error);
+        })
     };
 
     var insertCalendarEvent = function () {
@@ -46,6 +75,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         }).then(function successCallback(success) {
             var access_token = success.data.access_token;
             console.log(access_token);
+            getCalendarEvents();
             //insertCalendarEvent();
         }, function errorCallback(error) {
             console.log(error);

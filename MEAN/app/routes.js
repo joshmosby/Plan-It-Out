@@ -140,13 +140,13 @@ module.exports = function (app) {
         })
     });
 
-    app.get('api/google/events', function (req, res) {
-        oauth2Client.setCredentials(tokens);
+    app.get('/api/google/events', function (req, res) {
+        oauth2Client.setCredentials(googleTokens);
         calendar.events.list({
             auth: oauth2Client,
             calendarId: 'primary',
             timeMin: (new Date()).toISOString(),
-            maxResults: 10,
+            maxResults: 100,
             singleEvents: true,
             orderBy: 'startTime'
         }, function (err, response) {
@@ -155,16 +155,7 @@ module.exports = function (app) {
                 return;
             }
             var events = response.items;
-            if (events.length === 0) {
-                console.log('No upcoming events found.');
-            } else {
-                console.log('Upcoming 10 events:');
-                for (var i = 0; i < events.length; i++) {
-                    var event = events[i];
-                    var start = event.start.dateTime || event.start.date;
-                    console.log('%s - %s', start, event.summary);
-                }
-            }
+            res.send(events);
         });
     });
 
