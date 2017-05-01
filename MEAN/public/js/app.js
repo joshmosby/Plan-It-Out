@@ -1,1 +1,1 @@
-angular.module('sampleApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'SearchCtrl', 'SearchService', 'CalendarCtrl', 'CalendarService']);
+angular.module('sampleApp', ['ui.calendar', 'ngRoute', 'appRoutes', 'MainCtrl', 'SearchCtrl', 'SearchService', 'CalendarCtrl', 'CalendarService']);
