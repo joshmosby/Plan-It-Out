@@ -6,6 +6,24 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         }
     ];
 
+    $scope.alertOnDayClick = function (date, jsEvent, view) {
+        console.log('day clicked: ' + date.format());
+        $(this).css('background-color', 'red');
+
+        $http({
+            method: 'GET',
+            url: '/api/search-from-calendar',
+            headers: {
+                start: date.format(),//'2017-05-02T12:00:00',
+                end: date.format()//'2017-05-02T14:00:00'
+            }
+        }).then(function successCallback(success) {
+            console.log(success.data.events);
+        }, function errorCallback(error) {
+            console.log(error);
+        })
+    };
+
     $scope.uiConfig = {
         calendar: {
             height: 450,
@@ -17,14 +35,21 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             },
             eventClick: $scope.alertEventOnClick,
             eventDrop: $scope.alertOnDrop,
-            eventResize: $scope.alertOnResize
+            eventResize: $scope.alertOnResize,
+            dayClick: $scope.alertOnDayClick
         }
     };
 
-    var getCalendarEvents = function () {
+    var last_date = new Date().toISOString();
+
+    $scope.LoadMoreEvents = function () {
+        console.log(last_date);
         $http({
             method: 'GET',
-            url: '/api/google/events'
+            url: '/api/google/events',
+            headers: {
+                start: last_date
+            }
         }).then(function successCallback(success) {
             var events = success.data;
             if (events.length === 0) {
@@ -38,7 +63,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
                     start: event.start.dateTime.toString(),
                     end: event.end.dateTime.toString(),
                     stick: true
-                })
+                });
+                last_date = event.start.dateTime;
             }
 
         }, function errorCallback(error) {
@@ -75,7 +101,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         }).then(function successCallback(success) {
             var access_token = success.data.access_token;
             console.log(access_token);
-            getCalendarEvents();
+            $scope.LoadMoreEvents();
             //insertCalendarEvent();
         }, function errorCallback(error) {
             console.log(error);

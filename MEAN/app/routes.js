@@ -9,11 +9,12 @@ var google = require('googleapis');
 var calendar = google.calendar('v3');
 var plus = google.plus('v1');
 
-// Read google config data from file
+// Read config data from file
 var obj = JSON.parse(fs.readFileSync('app/config.json', 'utf8'));
 var client_id = obj.google.client_id;
 var client_secret = obj.google.client_secret;
 var redirect_url = obj.google.redirect_url;
+var eventbriteToken = obj.eventbrite.token;
 
 // New OAuth object
 var OAuth2 = google.auth.OAuth2;
@@ -56,10 +57,6 @@ module.exports = function (app) {
                 // There were no matches
                 console.log('Searching Eventbrite');
 
-                // Read token from file
-                var obj = JSON.parse(fs.readFileSync('app/config.json', 'utf8'));
-                var token = obj.eventbrite.token;
-
                 // HTTP Request to Eventbrite API
                 var options = {
                     method: 'GET',
@@ -69,7 +66,7 @@ module.exports = function (app) {
                         sort_by: 'date',
                         'location.address': searchLocation,
                         categories: categoryId,
-                        token: token
+                        token: eventbriteToken
                     }
                 };
 
@@ -86,6 +83,33 @@ module.exports = function (app) {
                     res.send(body);
                 });
             }
+        });
+    });
+
+    app.get('/api/search-from-calendar', function (req, res) {
+        // Get search parameters
+        var searchStart = req.headers.start;
+        var searchEnd = req.headers.end;
+
+        // HTTP Request to Eventbrite API
+        var options = {
+            method: 'GET',
+            url: 'https://www.eventbriteapi.com/v3/events/search/',
+            qs: {
+                //q: 'fun',
+                sort_by: 'date',
+                'location.address': 'Boston',
+                categories: '103',
+                'start_date.range_start': searchStart,
+                'start_date.range_end': searchEnd,
+                token: eventbriteToken
+            }
+        };
+
+        request(options, function (error, response, body) {
+            if (error) throw new Error(error);
+            // Return search results
+            res.send(body);
         });
     });
 
@@ -142,19 +166,22 @@ module.exports = function (app) {
 
     app.get('/api/google/events', function (req, res) {
         oauth2Client.setCredentials(googleTokens);
+        console.log(req.headers.start);
         calendar.events.list({
             auth: oauth2Client,
             calendarId: 'primary',
-            timeMin: (new Date()).toISOString(),
+            timeMin: req.headers.start,//(new Date()).toISOString(),
             maxResults: 100,
             singleEvents: true,
             orderBy: 'startTime'
         }, function (err, response) {
             if (err) {
                 console.log('The Calendar API returned an error: ' + err);
+                res.send([]);
                 return;
             }
             var events = response.items;
+            console.log(events);
             res.send(events);
         });
     });
