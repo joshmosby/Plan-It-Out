@@ -116,6 +116,29 @@ module.exports = function (app) {
         });
     });
 
+    app.post('/api/prefs/save', function (req, res) {
+        var location = req.headers.location;
+        var categories = req.headers.categories;
+        User.findOne({
+            id: userId
+        }, function (error, foundUser) {
+            if (foundUser) {
+                var updateData = {
+                    location: location,
+                    categories: categories
+                };
+                User.update({id: userId}, updateData, function (err, affected) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.send('OK');
+                });
+            } else {
+                res.send('OK');
+            }
+        })
+    });
+
     // Send URL to redirect to Google Sign In
     app.get('/api/google/auth/code', function (req, res) {
         // Need Calendar to modify user's Google Calendar

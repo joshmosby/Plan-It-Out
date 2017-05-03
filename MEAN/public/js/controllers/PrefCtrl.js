@@ -25,7 +25,18 @@ angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', 
     };
 
     $scope.SavePrefs = function () {
-        console.log($scope.categoryList);
+        $http({
+            method: 'POST',
+            url: '/api/prefs/save',
+            headers: {
+                'location': $scope.inputLocation.toLowerCase().trim(),
+                'categories': JSON.stringify($scope.categoryList)
+            }
+        }).then(function successCallback(success) {
+            console.log(success);
+        }, function errorCallback(error) {
+            console.log(error);
+        });
     }
 
 }]);
