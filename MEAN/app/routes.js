@@ -66,6 +66,7 @@ module.exports = function (app) {
                         sort_by: 'date',
                         'location.address': searchLocation,
                         categories: categoryId,
+                        expand: 'venue',
                         token: eventbriteToken
                     }
                 };
@@ -97,11 +98,12 @@ module.exports = function (app) {
             url: 'https://www.eventbriteapi.com/v3/events/search/',
             qs: {
                 //q: 'fun',
-                sort_by: 'date',
+                sort_by: 'best',
                 'location.address': 'Boston',
-                categories: '103',
+                //categories: '103',
                 'start_date.range_start': searchStart,
                 'start_date.range_end': searchEnd,
+                expand: 'venue',
                 token: eventbriteToken
             }
         };
@@ -166,7 +168,6 @@ module.exports = function (app) {
 
     app.get('/api/google/events', function (req, res) {
         oauth2Client.setCredentials(googleTokens);
-        console.log(req.headers.start);
         calendar.events.list({
             auth: oauth2Client,
             calendarId: 'primary',
@@ -181,7 +182,6 @@ module.exports = function (app) {
                 return;
             }
             var events = response.items;
-            console.log(events);
             res.send(events);
         });
     });
@@ -217,7 +217,6 @@ module.exports = function (app) {
                 res.send(err);
                 return;
             }
-            console.log('Event created: %s', event.htmlLink);
             res.send(event.htmlLink);
         })
     });

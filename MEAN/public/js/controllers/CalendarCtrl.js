@@ -1,27 +1,63 @@
 angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
 
+    var today = new Date().toISOString().substring(0, 10);
     $scope.eventSources = [
         {
-            events: []
+            events: [
+                {
+                    title: 'Earliest Time',
+                    start: today,
+                    stick: true
+                },
+                {
+                    title: 'Latest Time',
+                    start: today,
+                    stick: true
+                }
+            ],
+            color: 'yellow',   // an option!
+            textColor: 'black' // an option!
         }
     ];
 
-    $scope.alertOnDayClick = function (date, jsEvent, view) {
-        console.log('day clicked: ' + date.format());
-        $(this).css('background-color', 'red');
+    /* var start = new Date().toISOString();
+     var end = '2117-05-02T12:00:00';
 
-        $http({
-            method: 'GET',
-            url: '/api/search-from-calendar',
-            headers: {
-                start: date.format(),//'2017-05-02T12:00:00',
-                end: date.format()//'2017-05-02T14:00:00'
-            }
-        }).then(function successCallback(success) {
-            console.log(success.data.events);
-        }, function errorCallback(error) {
-            console.log(error);
-        })
+     $scope.alertOnDayClick = function (date, jsEvent, view) {
+     console.log('day clicked: ' + date.format());
+     if (date.format() < end.format()) {
+     $(this).css('background-color', 'blue');
+     } else {
+
+     }
+     $http({
+     method: 'GET',
+     url: '/api/search-from-calendar',
+     headers: {
+     start: date.format(),//'2017-05-02T12:00:00',
+     end: date.format()//'2017-05-02T14:00:00'
+     }
+     }).then(function successCallback(success) {
+     console.log(success.data.events);
+     }, function errorCallback(error) {
+     console.log(error);
+     })
+     };*/
+
+    var earliestTime = new Date();
+    earliestTime.setHours(earliestTime.getHours() - 4);
+    earliestTime = earliestTime.toISOString().substring(0,10);
+    var latestTime = new Date().toISOString().substring(0, 10);
+
+    $scope.alertOnDrop = function (event, delta, revertFunc) {
+        if (event.title === 'Earliest Time') {
+            earliestTime = event.start.format();
+            $scope.FindEventsInTimeRange();
+        }
+        if (event.title === 'Latest Time') {
+            latestTime = event.start.format();
+            $scope.FindEventsInTimeRange();
+        }
     };
 
     $scope.uiConfig = {
@@ -41,6 +77,66 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
     };
 
     var last_date = new Date().toISOString();
+
+    $scope.FindEventsInTimeRange = function () {
+        if (earliestTime.indexOf('T') < 0) {
+            earliestTime += 'T00:00:00';
+        }
+        if (latestTime.indexOf('T') < 0) {
+            latestTime += 'T23:59:59'
+        }
+        if (earliestTime > latestTime) {
+            $scope.isError = true;
+            $scope.errorMessage = 'Earliest Time needs to be before Latest Time';
+            $scope.searchResults = [];
+            return;
+        }
+        $scope.isError = false;
+        console.log('early: ' + earliestTime);
+        console.log('late: ' + latestTime);
+        $scope.isLoading = true;
+        $http({
+            method: 'GET',
+            url: '/api/search-from-calendar',
+            headers: {
+                start: earliestTime,
+                end: latestTime
+                //start: '2017-05-02T12:00:00',
+                //end: '2017-05-09T14:00:00'
+            }
+        }).then(function successCallback(success) {
+            console.log(success.data.events);
+            $scope.searchResults = success.data;
+            if (success.data.events.length === 0) {
+                $scope.noResults = true;
+                $scope.errorMessage = 'No events found in your time slot.';
+            }
+            $scope.isLoading = false;
+        }, function errorCallback(error) {
+            console.log(error);
+            $scope.isLoading = false;
+        })
+    };
+
+    $scope.DisplayStart = function (start) {
+        return 'hi';
+    };
+
+    $scope.eventClicked = function (event) {
+        $scope.selectedEvent = event;
+        $window.open(event.url);
+    };
+
+    $scope.GoingToEvent = function () {
+        var summary = $scope.selectedEvent.name.text;
+        var venue = $scope.selectedEvent.venue.address;
+        var location = venue.address_1 + ', ' + venue.city + ', ' + venue.region + ', ' + venue.country;
+        var description = $scope.selectedEvent.description.text;
+        var start = $scope.selectedEvent.start.local;
+        var end = $scope.selectedEvent.end.local;
+        var timezone = $scope.selectedEvent.start.timezone;
+        insertCalendarEvent(summary, location, description, start, end, timezone);
+    };
 
     $scope.LoadMoreEvents = function () {
         console.log(last_date);
@@ -72,17 +168,17 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         })
     };
 
-    var insertCalendarEvent = function () {
+    var insertCalendarEvent = function (summary, location, description, start, end, timezone) {
         $http({
             method: 'GET',
             url: '/api/google/insert',
             headers: {
-                'summary': 'event summary',
-                'location': 'event location',
-                'description': 'event description',
-                'start': '2017-04-24T19:00:00-04:00',
-                'end': '2017-04-24T19:00:00-06:00',
-                'timezone': 'America/New_York'
+                'summary': summary,
+                'location': location,
+                'description': '',//description.substring(0,5),
+                'start': start,
+                'end': end,
+                'timezone': timezone
             }
         }).then(function successCallback(success) {
             // Note: could be here even if adding calendar wasn't successful.
