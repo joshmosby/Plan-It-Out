@@ -209,6 +209,7 @@ module.exports = function (app) {
 
     app.get('/api/google/events', function (req, res) {
         var reload = req.headers.reload;
+        var start = new Date().toISOString();
         User.findOne({
             id: userId
         }, function (error, foundUser) {
@@ -221,7 +222,7 @@ module.exports = function (app) {
                 calendar.events.list({
                     auth: oauth2Client,
                     calendarId: 'primary',
-                    timeMin: req.headers.start,//(new Date()).toISOString(),
+                    timeMin: start,
                     maxResults: 100,
                     singleEvents: true,
                     orderBy: 'startTime'
