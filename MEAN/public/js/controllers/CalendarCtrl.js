@@ -230,6 +230,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         if (codeIndex > -1) {
             var code = url.substring(codeIndex + 5);
             getGoogleToken(code);
+        } else {
+            $scope.LoadMoreEvents(false);
         }
     };
 
