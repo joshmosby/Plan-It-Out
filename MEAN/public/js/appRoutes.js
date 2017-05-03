@@ -20,7 +20,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 
     .when('/preferences', {
         templateUrl: 'views/preferences.html',
-        controller: 'tbd'
+        controller: 'PrefController'
     });
 
     $locationProvider.html5Mode(true);

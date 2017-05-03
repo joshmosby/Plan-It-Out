@@ -2,6 +2,32 @@
     <!-- TITLE TEXT -->
     <h1>Preferences</h1>
 
-    <body>
-        <p hello>
-    </body>
+    <div class="form-group">
+        <input type="text" class="form-control" name="name" ng-model="inputLocation" placeholder="Enter your location">
+    </div>
+    <div class="form-group">
+        <input type="checkbox" name="vehicle" value="'All Categories'">{{categoryList[1]}}
+        <input type="checkbox" name="vehicle" value="Music">{{categoryList[2]}}
+        <input type="checkbox" name="vehicle" value="Business & Professional">{{categoryList[3]}}<br>
+        <input type="checkbox" name="vehicle" value="Food & Drink">{{categoryList[4]}}
+        <input type="checkbox" name="vehicle" value="Community & Culture">{{categoryList[5]}}
+        <input type="checkbox" name="vehicle" value="Performing & Visual Arts">{{categoryList[6]}}<br>
+        <input type="checkbox" name="vehicle" value="Film, Media & Entertainment">{{categoryList[7]}}
+        <input type="checkbox" name="vehicle" value="Sports & Fitness">{{categoryList[8]}}
+        <input type="checkbox" name="vehicle" value="Health & Wellness">{{categoryList[9]}}<br>
+        <input type="checkbox" name="vehicle" value="Science & Technology">{{categoryList[10]}}
+        <input type="checkbox" name="vehicle" value="Travel & Outdoor">{{categoryList[11]}}
+        <input type="checkbox" name="vehicle" value="Charity & Causes">{{categoryList[12]}}<br>
+        <input type="checkbox" name="vehicle" value="Religion & Spirituality">{{categoryList[13]}}
+        <input type="checkbox" name="vehicle" value="Seasonal & Holiday">{{categoryList[14]}}
+        <input type="checkbox" name="vehicle" value="Government & Politics">{{categoryList[15]}}<br>
+        <input type="checkbox" name="vehicle" value="Fashion & Beauty">{{categoryList[16]}}
+        <input type="checkbox" name="vehicle" value="Home & Lifestyle">{{categoryList[17]}}
+        <input type="checkbox" name="vehicle" value="Auto, Boat & Air">{{categoryList[18]}}<br>
+        <input type="checkbox" name="vehicle" value="Hobbies & Special Interest">{{categoryList[19]}}
+        <input type="checkbox" name="vehicle" value="Other">{{categoryList[20]}}
+    </div>
+
+    <div class="form-group">
+        <button ng-click="" type="submit">Search</button>
+    </div>
