@@ -169,6 +169,7 @@ module.exports = function (app) {
     });
 
     app.get('/api/google/events', function (req, res) {
+        var reload = req.headers.reload;
         User.findOne({
             id: userId
         }, function (error, foundUser) {

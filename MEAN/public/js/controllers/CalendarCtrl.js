@@ -143,8 +143,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
 
     var loadMoreEvents = function () {
         console.log(last_date);
-        console.log('here is the token: ');
-        console.log(googleTokens);
         $http({
             method: 'GET',
             url: '/api/google/events',
@@ -211,7 +209,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             url: '/api/google/auth/token',
             headers: {'code': code}
         }).then(function successCallback(success) {
-            var access_token = success.data.tokens.access_token;
+            //var access_token = success.data.tokens.access_token;
             googleTokens = success.data.tokens;
             userId = success.data.id;
             console.log(googleTokens);
