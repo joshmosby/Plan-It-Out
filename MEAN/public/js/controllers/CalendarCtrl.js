@@ -82,6 +82,24 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
     var last_date = new Date().toISOString();
 
     $scope.FindEventsInTimeRange = function () {
+        $http({
+            method: 'GET',
+            url: '/api/prefs/get'
+        }).then(function successCallback(success) {
+            console.log(success.data);
+            var location = success.data.location;
+            var categories = success.data.categories;
+            if (location && categories) {
+                FindEventsInTimeRangeHelper(location, categories);
+            } else {
+                FindEventsInTimeRangeHelper('', '');
+            }
+        }, function errorCallback(error) {
+            console.log(error);
+        });
+    };
+
+    var FindEventsInTimeRangeHelper = function (location, categories) {
         if (earliestTime.indexOf('T') < 0) {
             earliestTime += 'T00:00:00';
         }
@@ -103,7 +121,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             url: '/api/search-from-calendar',
             headers: {
                 start: earliestTime,
-                end: latestTime
+                end: latestTime,
+                location: location
                 //start: '2017-05-02T12:00:00',
                 //end: '2017-05-09T14:00:00'
             }

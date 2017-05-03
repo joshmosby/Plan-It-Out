@@ -92,6 +92,7 @@ module.exports = function (app) {
         // Get search parameters
         var searchStart = req.headers.start;
         var searchEnd = req.headers.end;
+        var location = req.headers.location;
 
         // HTTP Request to Eventbrite API
         var options = {
@@ -100,7 +101,7 @@ module.exports = function (app) {
             qs: {
                 //q: 'fun',
                 sort_by: 'best',
-                'location.address': 'Boston',
+                'location.address': location,
                 //categories: '103',
                 'start_date.range_start': searchStart,
                 'start_date.range_end': searchEnd,
