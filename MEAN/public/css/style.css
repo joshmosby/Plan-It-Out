@@ -1,14 +1,23 @@
-body { 
-	padding-top:30px; 
-	background-image: url('images/back.jpg');
-	color: white;
-
-	@font-face {
-		font-family: Moon;
-		src: url("Moon-Light.woff") format("woff");
-
-	}
-
-	
+body {
+    padding-top: 30px;
+    background-image: url(space1.jpg);
+    font-family: myFirstFont;
 }
 
+@font-face {
+    font-family: myFirstFont;
+    src: url(Moon/MoonLight.woff);
+}
+
+button {
+  color: #000000;
+  cursor: pointer;
+  font-weight: bold;
+  height: 50px;
+  width: 194px;
+}
+
+.google{
+	background: url("google_signin.png") no-repeat;
+	padding: 0px;
+}
