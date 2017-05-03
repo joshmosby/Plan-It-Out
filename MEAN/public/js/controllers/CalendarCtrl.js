@@ -177,6 +177,9 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
                 console.log('No upcoming events found.');
                 return;
             }
+            if (reload === true) {
+                $scope.eventSources[0].events = [];
+            }
             for (var i = 0; i < events.length; i++) {
                 var event = events[i];
                 $scope.eventSources[0].events.push({
@@ -218,6 +221,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
                 end: end,
                 stick: true
             });
+            $scope.LoadMoreEvents(true);
         }, function errorCallback(error) {
             console.log(error);
         });
