@@ -139,6 +139,22 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/api/prefs/get', function (req, res) {
+        User.findOne({
+            id: userId
+        }, function (error, foundUser) {
+            if (error) {
+                console.log(error);
+                res.send(error);
+            }
+            if (foundUser && foundUser.location && foundUser.categories) {
+                res.send({location: foundUser.location, categories: JSON.parse(foundUser.categories)});
+            } else {
+                res.send({location: '', categories: ''});
+            }
+        })
+    });
+
     // Send URL to redirect to Google Sign In
     app.get('/api/google/auth/code', function (req, res) {
         // Need Calendar to modify user's Google Calendar

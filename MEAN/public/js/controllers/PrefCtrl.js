@@ -37,6 +37,27 @@ angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', 
         }, function errorCallback(error) {
             console.log(error);
         });
-    }
+    };
+
+    var loadPrefs = function () {
+        $http({
+            method: 'GET',
+            url: '/api/prefs/get'
+        }).then(function successCallback(success) {
+            console.log(success.data);
+            var location = success.data.location;
+            var categories = success.data.categories;
+            if (location) {
+                $scope.inputLocation = location;
+            }
+            if (categories !== '') {
+                $scope.categoryList = categories;
+            }
+        }, function errorCallback(error) {
+            console.log(error);
+        });
+    };
+
+    loadPrefs();
 
 }]);
