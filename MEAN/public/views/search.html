@@ -1,4 +1,4 @@
-<div style="background:transparent !important" class="jumbotron text-center">
+<div class="jumbotron text-center">
     <!-- TITLE TEXT -->
     <h1>Search</h1>
     <p>Find an event near you.</p>
@@ -27,7 +27,7 @@
 
     <!-- SEARCH BUTTON -->
     <div class="form-group">
-        <button ng-click="SearchFunction()" type="submit" class="btn btn-success btn-lg status">Search</button>
+        <button ng-click="SearchFunction()" type="submit" >Search</button>
     </div>
 </div>
 
@@ -37,7 +37,7 @@
 </div>
 
 <!-- LOADING BOX -->
-<div style="background:transparent !important" class="jumbotron text-center" ng-show="isLoading">
+<div class="jumbotron text-center" ng-show="isLoading">
     <span class="glyphicon glyphicon-repeat spinner"></span>
     <p>Loading....</p>
 </div>
