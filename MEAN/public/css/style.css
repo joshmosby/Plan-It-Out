@@ -1,1 +1,14 @@
-body { padding-top:30px; }
+body { 
+	padding-top:30px; 
+	background-image: url('images/back.jpg');
+	color: white;
+
+	@font-face {
+		font-family: Moon;
+		src: url("Moon-Light.woff") format("woff");
+
+	}
+
+	
+}
+
