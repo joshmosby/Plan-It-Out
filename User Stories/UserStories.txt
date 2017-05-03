@@ -40,16 +40,10 @@ When the user selects an events the app adds the event to their calendar and RSV
 * What should happen:
    * User’s monthly calendar is shown
    * User selects a free day/time
-   * User selects a non-free day/time and selects the override option
    * User selects one of the possible events available on that day and the app adds an RSVP on that day/time for that event
 * Issues:
-   * Event gets cancelled
-      * Notify them via email
-      * Remove Event from their calendar
-   * Event that’s selected is sold out
-      * Display message saying the event is sold out
-   * Cancelling an RSVP
-      * Click the event and have the option to remove from calendar
+   * User RSVP's to event that conflicts with previous event
+	 * All events will be shown on calendar, user will have to decide
 
 
 We plan on using Slack to keep track of roles and responsibilities
