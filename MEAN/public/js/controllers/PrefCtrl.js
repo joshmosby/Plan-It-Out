@@ -1,4 +1,4 @@
-angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', function ($scope, $http) {
+angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
 
 
     $scope.categoryList = {
@@ -34,6 +34,7 @@ angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', 
             }
         }).then(function successCallback(success) {
             console.log(success);
+            $window.location = 'http://127.0.0.1:8080/calendar';
         }, function errorCallback(error) {
             console.log(error);
         });
