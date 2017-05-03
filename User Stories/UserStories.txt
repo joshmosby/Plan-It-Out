@@ -2,8 +2,8 @@
 
 
 Login:
-As a logged-out user, I want to log in with my Google account so my schedule is linked with the web app. When the “Sign in with Google” button is pressed the user will be redirected to their home page if the login was successful. One possible issue is that the user doesn’t have an existing Google account which will be handled by offering the user a link to create a Google account. If the user inputs an incorrect username or password Google would handle the issue.
-
+As a logged-out user, I want to log in with my Google account so my schedule is linked with the web app. When the “Sign in with Google” button is pressed the user will be redirected to their home page if the login was successful.
+One possible issue is that the user doesn’t have an existing Google account which will be handled by offering the user a link to create a Google account. If the user inputs an incorrect username or password Google would handle the issue.
 
 * What should happen:
    * User clicks “Sign in with Google” button
@@ -14,11 +14,13 @@ As a logged-out user, I want to log in with my Google account so my schedule is 
    * User enters incorrect username/password
       * Google would handle sign in issues
 
-
-
-
+	  
+	  
 Viewing Calendar:
-As a logged-in user, I want to see days and times that I’m free with my Google Calendar so I can browse through potential events in the area during those times. On the page the user’s monthly calendar will be shown. The user will click on a day and time that they’re free. After selecting a time they’re available a list of events will come up that are happening during that time. An issue that might come up is that the user might not be logged in which would be solved by referring the user to the login page. If the user chooses a time when they’re not free a popup message will tell the user that the time they chose isn’t free and ask if they still want to pick an event. If there are no events available during their selected times a message will let the user know.
+As a logged-in user, I want to see days and times that I’m free with my Google Calendar so I can browse through potential events in the area during those times.
+On the page the user’s monthly calendar will be shown. The user will click on a day and time that they’re free. After selecting a time they’re available a list of events will come up events that are happening during that time.
+An issue that might come up is that the user might not be logged in which would be solved by referring the user to the login page. If there are no events available during their selected times a message will let the user know.
+
 * What should happen:
    * User’s monthly calendar is shown
    * User clicks on a day and time that they’re free
@@ -28,12 +30,13 @@ As a logged-in user, I want to see days and times that I’m free with my Google
       * Refer to the log in story
    * There are no events listed during their selected time
       * Display message saying no events
-   * User chooses a day and time when they’re not free
-      * Popup that tells the user that they are not free, and asks if they still want to pick an event
 
-
+	  
+	  
 RSVP to event:
-As a user who has chosen a free day, time, and event to go to, I want to RSVP to the event and add it to my Google Calendar. After selecting a time the user is available or after the user selects a time that they aren’t free and decides to continue anyway the user will be given a list of events. When the user selects an events the app adds the event to their calendar and RSVP’s to the event. A user would be able to cancel their RSVP by clicking the event on their calendar and removing it. If the event the user selected is sold out a message will be displayed notifying them. If an event the user had RSVP’d to is canceled the event will be removed from the user’s calendar and an email will be sent notifying them.
+As a user who has chosen a free day, time, and event to go to, I want to RSVP to the event and add it to my Google Calendar. After selecting a time the user is available the user will be given a list of events.
+When the user selects an events the app adds the event to their calendar and RSVP’s to the event.
+
 * What should happen:
    * User’s monthly calendar is shown
    * User selects a free day/time
