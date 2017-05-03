@@ -141,13 +141,14 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         insertCalendarEvent(summary, location, description, start, end, timezone);
     };
 
-    var loadMoreEvents = function () {
+    $scope.LoadMoreEvents = function (reload) {
         console.log(last_date);
         $http({
             method: 'GET',
             url: '/api/google/events',
             headers: {
-                'start': last_date
+                'start': last_date,
+                'reload': reload
                 //'googleTokens': googleTokens,
                 //'userId': userId
             }
@@ -156,6 +157,9 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             if (events.length === 0) {
                 console.log('No upcoming events found.');
                 return;
+            }
+            if (reload) {
+                $scope.eventSources[0].events = [];
             }
             for (var i = 0; i < events.length; i++) {
                 var event = events[i];
@@ -214,7 +218,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             userId = success.data.id;
             console.log(googleTokens);
             console.log(userId);
-            loadMoreEvents();
+            $scope.LoadMoreEvents(false);
         }, function errorCallback(error) {
             console.log(error);
         });

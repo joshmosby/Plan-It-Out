@@ -173,7 +173,7 @@ module.exports = function (app) {
         User.findOne({
             id: userId
         }, function (error, foundUser) {
-            if (foundUser && foundUser.calendar) {
+            if (foundUser && foundUser.calendar && reload === 'false') {
                 // Found user's calendar in DB
                 console.log('found user calendar in DB');
                 res.send(JSON.parse(foundUser.calendar));

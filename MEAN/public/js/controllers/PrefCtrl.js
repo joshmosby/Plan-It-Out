@@ -1,26 +1,31 @@
-angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', function($scope, $http) {
+angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', function ($scope, $http) {
 
 
-    $scope.categoryList = [
-        'All Categories',
-        'Music',
-        'Business & Professional',
-        'Food & Drink',
-        'Community & Culture',
-        'Performing & Visual Arts',
-        'Film, Media & Entertainment',
-        'Sports & Fitness',
-        'Health & Wellness',
-        'Science & Technology',
-        'Travel & Outdoor',
-        'Charity & Causes',
-        'Religion & Spirituality',
-        'Seasonal & Holiday',
-        'Government & Politics',
-        'Fashion & Beauty',
-        'Home & Lifestyle',
-        'Auto, Boat & Air',
-        'Hobbies & Special Interest',
-        'Other'
-    ];
+    $scope.categoryList = {
+        'All Categories': false,
+        'Music': false,
+        'Business & Professional': false,
+        'Food & Drink': false,
+        'Community & Culture': false,
+        'Performing & Visual Arts': false,
+        'Film, Media & Entertainment': false,
+        'Sports & Fitness': false,
+        'Health & Wellness': false,
+        'Science & Technology': false,
+        'Travel & Outdoor': false,
+        'Charity & Causes': false,
+        'Religion & Spirituality': false,
+        'Seasonal & Holiday': false,
+        'Government & Politics': false,
+        'Fashion & Beauty': false,
+        'Home & Lifestyle': false,
+        'Auto, Boat & Air': false,
+        'Hobbies & Special Interest': false,
+        'Other': false
+    };
+
+    $scope.SavePrefs = function () {
+        console.log($scope.categoryList);
+    }
+
 }]);
