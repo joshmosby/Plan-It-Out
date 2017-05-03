@@ -15,8 +15,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
                     stick: true
                 }
             ],
-            color: 'yellow',   // an option!
-            textColor: 'black' // an option!
+            color: 'yellow',
+            textColor: 'black'
         }
     ];
 
@@ -46,7 +46,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
 
     var earliestTime = new Date();
     earliestTime.setHours(earliestTime.getHours() - 4);
-    earliestTime = earliestTime.toISOString().substring(0,10);
+    earliestTime = earliestTime.toISOString().substring(0, 10);
     var latestTime = new Date().toISOString().substring(0, 10);
 
     $scope.alertOnDrop = function (event, delta, revertFunc) {
@@ -184,6 +184,15 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             // Note: could be here even if adding calendar wasn't successful.
             // Need to check if success.data == a calendar url
             console.log(success.data);
+            if (success.data.indexOf('https://www.google.com/calendar/event') < 0) {
+                return;
+            }
+            $scope.eventSources[0].events.push({
+                title: summary,
+                start: start,
+                end: end,
+                stick: true
+            });
         }, function errorCallback(error) {
             console.log(error);
         });
