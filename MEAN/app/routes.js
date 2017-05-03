@@ -93,7 +93,11 @@ module.exports = function (app) {
         var searchStart = req.headers.start;
         var searchEnd = req.headers.end;
         var location = req.headers.location;
-
+        var categories = JSON.parse(req.headers.categories);
+        console.log(categories);
+        var searchData = new Search();
+        categories = searchData.getMultipleCategoryIds(categories);
+        console.log(categories);
         // HTTP Request to Eventbrite API
         var options = {
             method: 'GET',
@@ -102,7 +106,7 @@ module.exports = function (app) {
                 //q: 'fun',
                 sort_by: 'best',
                 'location.address': location,
-                //categories: '103',
+                categories: categories,
                 'start_date.range_start': searchStart,
                 'start_date.range_end': searchEnd,
                 expand: 'venue',

@@ -122,9 +122,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             headers: {
                 start: earliestTime,
                 end: latestTime,
-                location: location
-                //start: '2017-05-02T12:00:00',
-                //end: '2017-05-09T14:00:00'
+                location: location,
+                categories: JSON.stringify(categories)
             }
         }).then(function successCallback(success) {
             console.log(success.data.events);
