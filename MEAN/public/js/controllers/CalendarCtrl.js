@@ -1,5 +1,8 @@
 angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
 
+    var googleTokens;
+    var userId;
+
     var today = new Date().toISOString().substring(0, 10);
     $scope.eventSources = [
         {
@@ -65,8 +68,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             height: 450,
             editable: true,
             header: {
-                left: 'month basicWeek basicDay agendaWeek agendaDay',
-                center: 'title',
+                //left: 'month basicWeek basicDay agendaWeek agendaDay',
+                //center: 'title',
                 right: 'today prev,next'
             },
             eventClick: $scope.alertEventOnClick,
@@ -138,13 +141,17 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         insertCalendarEvent(summary, location, description, start, end, timezone);
     };
 
-    $scope.LoadMoreEvents = function () {
+    var loadMoreEvents = function () {
         console.log(last_date);
+        console.log('here is the token: ');
+        console.log(googleTokens);
         $http({
             method: 'GET',
             url: '/api/google/events',
             headers: {
-                start: last_date
+                'start': last_date
+                //'googleTokens': googleTokens,
+                //'userId': userId
             }
         }).then(function successCallback(success) {
             var events = success.data;
@@ -204,10 +211,12 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             url: '/api/google/auth/token',
             headers: {'code': code}
         }).then(function successCallback(success) {
-            var access_token = success.data.access_token;
-            console.log(access_token);
-            $scope.LoadMoreEvents();
-            //insertCalendarEvent();
+            var access_token = success.data.tokens.access_token;
+            googleTokens = success.data.tokens;
+            userId = success.data.id;
+            console.log(googleTokens);
+            console.log(userId);
+            loadMoreEvents();
         }, function errorCallback(error) {
             console.log(error);
         });

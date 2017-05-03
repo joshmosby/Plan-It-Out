@@ -25,6 +25,7 @@ var oauth2Client = new OAuth2(
 );
 
 var googleTokens;
+var userId;
 
 module.exports = function (app) {
 
@@ -159,30 +160,49 @@ module.exports = function (app) {
                 var userData = new User();
                 userData.id = user.id;
                 userData.save();
+                userId = user.id;
+                // Return Google tokens
+                googleTokens = tokens;
+                res.send({'tokens': tokens, 'id': user.id});
             });
-            // Return Google tokens
-            googleTokens = tokens;
-            res.send(tokens);
         })
     });
 
     app.get('/api/google/events', function (req, res) {
-        oauth2Client.setCredentials(googleTokens);
-        calendar.events.list({
-            auth: oauth2Client,
-            calendarId: 'primary',
-            timeMin: req.headers.start,//(new Date()).toISOString(),
-            maxResults: 100,
-            singleEvents: true,
-            orderBy: 'startTime'
-        }, function (err, response) {
-            if (err) {
-                console.log('The Calendar API returned an error: ' + err);
-                res.send([]);
-                return;
+        User.findOne({
+            id: userId
+        }, function (error, foundUser) {
+            if (foundUser) {
+                // Found user's calendar in DB
+                console.log('found user calendar in DB');
+                res.send(JSON.parse(foundUser.calendar));
+            } else {
+                oauth2Client.setCredentials(googleTokens);
+                calendar.events.list({
+                    auth: oauth2Client,
+                    calendarId: 'primary',
+                    timeMin: req.headers.start,//(new Date()).toISOString(),
+                    maxResults: 100,
+                    singleEvents: true,
+                    orderBy: 'startTime'
+                }, function (err, response) {
+                    if (err) {
+                        console.log('The Calendar API returned an error: ' + err);
+                        res.send([]);
+                        return;
+                    }
+                    var events = response.items;
+                    var updateData = {
+                        calendar: JSON.stringify(events)
+                    };
+                    User.update({id: userId}, updateData, function (err, affected) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                    res.send(events);
+                });
             }
-            var events = response.items;
-            res.send(events);
         });
     });
 

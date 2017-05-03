@@ -5,68 +5,71 @@
     </div>
 
 </div>
-<h1>Events in your time range</h1>
 
-<!-- LOADING BOX -->
-<div class="jumbotron text-center" ng-show="isLoading">
-    <span class="glyphicon glyphicon-repeat spinner"></span>
-    <p>Loading....</p>
-</div>
+<div class="jumbotron text-left">
+    <h3>Events in your time range</h3>
 
-<!-- ERROR MESSAGE -->
-<div class="row show-hide-message" ng-show="isError">
-    <div class="alert alert-danger">{{ errorMessage }}</div>
-</div>
-
-<!-- NO RESULTS MESSAGE -->
-<div class="row show-hide-message" ng-show="noResults">
-    <div class="alert alert-warning">{{ errorMessage }}</div>
-</div>
-
-<!-- SEARCH RESULTS FROM EVENTBRITE -->
-<div class="list-group">
-    <button type="button" class="list-group-item"
-            ng-click="eventClicked(event)"
-            data-toggle="modal"
-            data-target="#myModal"
-            ng-repeat="event in searchResults.events">{{event.name.text}}
-    </button>
-    <!--<button type="button" class="list-group-item" ng-click="eventClicked(event.url)" ng-repeat="event in searchResults.events">{{event.name.text + ' - ' + DisplayStart(event.start.local)}}</button>-->
-</div>
-
-<!-- POPUP TO CONFIRM RSVP, ADD TO CALENDAR -->
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">RSVP</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you going to "{{selectedEvent.name.text}}"?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-default" ng-click="GoingToEvent()" data-dismiss="modal">
-                    Yes. Add it to my calendar
-                </button>
-            </div>
-        </div>
-
+    <!-- LOADING BOX -->
+    <div class="jumbotron text-center" ng-show="isLoading">
+        <span class="glyphicon glyphicon-repeat spinner"></span>
+        <p>Loading....</p>
     </div>
-</div>
 
-<hr/>
-<!--
-<div>
-    <h1>Suggested events for today</h1>
+    <!-- ERROR MESSAGE -->
+    <div class="row show-hide-message" ng-show="isError">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+    </div>
+
+    <!-- NO RESULTS MESSAGE -->
+    <div class="row show-hide-message" ng-show="noResults">
+        <div class="alert alert-warning">{{ errorMessage }}</div>
+    </div>
+
+    <!-- SEARCH RESULTS FROM EVENTBRITE -->
+    <div class="list-group">
+        <button type="button" class="list-group-item"
+                ng-click="eventClicked(event)"
+                data-toggle="modal"
+                data-target="#myModal"
+                ng-repeat="event in searchResults.events">{{event.name.text}}
+        </button>
+        <!--<button type="button" class="list-group-item" ng-click="eventClicked(event.url)" ng-repeat="event in searchResults.events">{{event.name.text + ' - ' + DisplayStart(event.start.local)}}</button>-->
+    </div>
+
+    <!-- POPUP TO CONFIRM RSVP, ADD TO CALENDAR -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">RSVP</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you going to "{{selectedEvent.name.text}}"?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-default" ng-click="GoingToEvent()" data-dismiss="modal">
+                        Yes. Add it to my calendar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <hr/>
-    <h1>Suggested events for this weekend</h1>
-    <hr/>
-    <h1>Suggested events for next week</h1>
-    <hr/>
-    <h1>Suggested events for next weekend</h1>
+    <!--
+    <div>
+        <h1>Suggested events for today</h1>
+        <hr/>
+        <h1>Suggested events for this weekend</h1>
+        <hr/>
+        <h1>Suggested events for next week</h1>
+        <hr/>
+        <h1>Suggested events for next weekend</h1>
+    </div>
+    -->
 </div>
--->
