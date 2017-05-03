@@ -21,3 +21,13 @@ button {
 	background: url("google_signin.png") no-repeat;
 	padding: 0px;
 }
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Bottom of button */
+  right: 0;
+  margin-left: -100px; /* More to the left */
+}
