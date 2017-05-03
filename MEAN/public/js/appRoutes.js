@@ -1,23 +1,28 @@
 angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
-	$routeProvider
+    $routeProvider
 
-		// home page
-		.when('/', {
-			templateUrl: 'views/home.html',
-			controller: 'MainController'
-		})
+    // home page
+        .when('/', {
+        templateUrl: 'views/home.html',
+        controller: 'MainController'
+    })
 
-		.when('/search', {
-			templateUrl: 'views/search.html',
-			controller: 'SearchController'
-		})
+    .when('/search', {
+        templateUrl: 'views/search.html',
+        controller: 'SearchController'
+    })
 
-		.when('/calendar', {
-			templateUrl: 'views/calendar.html',
-			controller: 'CalendarController'
-		});
+    .when('/calendar', {
+        templateUrl: 'views/calendar.html',
+        controller: 'CalendarController'
+    })
 
-	$locationProvider.html5Mode(true);
+    .when('/preferences', {
+        templateUrl: 'views/preferences.html',
+        controller: 'tbd'
+    });
+
+    $locationProvider.html5Mode(true);
 
 }]);
