@@ -33,3 +33,10 @@ button {
   width: 25%;
   margin-left: 36%;
 }
+
+.columnList {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+	text-align: left;
+}
