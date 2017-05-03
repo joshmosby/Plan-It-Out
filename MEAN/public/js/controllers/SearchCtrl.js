@@ -1,4 +1,4 @@
-angular.module('SearchCtrl', []).controller('SearchController', ['$scope', '$http', function ($scope, $http) {
+angular.module('SearchCtrl', []).controller('SearchController', ['$scope', '$http', '$window', function ($scope, $http, $window) {
 
     $scope.searchQuery = "";
     $scope.inputLocation = "";
@@ -65,6 +65,11 @@ angular.module('SearchCtrl', []).controller('SearchController', ['$scope', '$htt
                 console.log(error);
             });
         }
+    };
+
+    $scope.EventClicked = function (event) {
+        $scope.selectedEvent = event;
+        $window.open(event.url);
     };
 
     $scope.ChangeCategory = function (category) {
