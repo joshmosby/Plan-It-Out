@@ -6,10 +6,12 @@
         <input type="text" class="form-control" name="name" ng-model="inputLocation" placeholder="Enter your location">
     </div>
 
-    <label ng-repeat="(cat,enabled) in categoryList">
-        <input type="checkbox" ng-model="categoryList[cat]"/> {{cat}}
-    </label>
-
+	<div class = "columnList">
+    <ul class="animate-repeat" ng-repeat="(cat,enabled) in categoryList">
+      <input type="checkbox" ng-model="categoryList[cat]"/> {{cat}}
+    </ul>
+	</div>
+	
     <div>
         <button ng-click="SavePrefs()" type="submit">Save</button>
     </div>
