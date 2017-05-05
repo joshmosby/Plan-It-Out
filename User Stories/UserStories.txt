@@ -43,7 +43,7 @@ When the user selects an events the app adds the event to their calendar and RSV
    * User selects one of the possible events available on that day and the app adds an RSVP on that day/time for that event
 * Issues:
    * User RSVP's to event that conflicts with previous event
-	 * All events will be shown on calendar, user will have to decide
+	 * EDIT: All events will be shown on calendar, user will decide. (Initially we wanted a pop up box informing them they already have an event listed on that day but due to the time sensitive nature of registering for events, eg: when tickets are running out, we did not want to delay the customer's RSVP).
 
 
 We plan on using Slack to keep track of roles and responsibilities
