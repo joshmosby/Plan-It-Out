@@ -2,7 +2,7 @@
 1. Google Calendar API displays the user’s calendar for the current month.
 2. The user selects a day and time on the calendar that they are free.
 3. The Eventbrite API is requested and returns a list of events on that day and time.
-
+EDIT: The Goolge Calendar's result is stored in a database so the Google Calendar API does not need to be called everytime the calendar needs to be displayed. 
 
 Things that can go wrong:
 1. The user turned off location access on their web browser
