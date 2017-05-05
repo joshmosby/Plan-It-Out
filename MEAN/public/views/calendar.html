@@ -1,7 +1,7 @@
 <div class="jumbotron text-center">
 
+    <!-- Angular UI Calendar -->
     <div ui-calendar="uiConfig.calendar" ng-model="eventSources">
-        <!--<button ng-click="LoadMoreEvents()" type="submit" class="btn status">Load more events</button>-->
         <button type="submit" class="btn status" ng-click="LoadMoreEvents(true)">Reload</button>
     </div>
 
@@ -29,12 +29,11 @@
     <!-- SEARCH RESULTS FROM EVENTBRITE -->
     <div class="list-group">
         <button type="button" class="list-group-item"
-                ng-click="eventClicked(event)"
+                ng-click="EventClicked(event)"
                 data-toggle="modal"
                 data-target="#myModal"
                 ng-repeat="event in searchResults.events">{{event.name.text}}
         </button>
-        <!--<button type="button" class="list-group-item" ng-click="eventClicked(event.url)" ng-repeat="event in searchResults.events">{{event.name.text + ' - ' + DisplayStart(event.start.local)}}</button>-->
     </div>
 
     <!-- POPUP TO CONFIRM RSVP, ADD TO CALENDAR -->
@@ -53,7 +52,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
                     <button type="button" class="btn btn-default" ng-click="GoingToEvent()" data-dismiss="modal">
-                        Yes. Add it to my calendar
+                        Yes
                     </button>
                 </div>
             </div>
@@ -62,15 +61,4 @@
     </div>
 
     <hr/>
-    <!--
-    <div>
-        <h1>Suggested events for today</h1>
-        <hr/>
-        <h1>Suggested events for this weekend</h1>
-        <hr/>
-        <h1>Suggested events for next week</h1>
-        <hr/>
-        <h1>Suggested events for next weekend</h1>
-    </div>
-    -->
 </div>

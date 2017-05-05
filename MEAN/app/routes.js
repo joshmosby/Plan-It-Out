@@ -252,7 +252,7 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/api/google/insert', function (req, res) {
+    app.post('/api/google/insert', function (req, res) {
         var summary = req.headers.summary;
         var location = req.headers.location;
         var description = req.headers.description;

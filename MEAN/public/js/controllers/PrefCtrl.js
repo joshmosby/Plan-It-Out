@@ -33,7 +33,6 @@ angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', 
                 'categories': JSON.stringify($scope.categoryList)
             }
         }).then(function successCallback(success) {
-            console.log(success);
             $window.location = 'http://127.0.0.1:8080/calendar';
         }, function errorCallback(error) {
             console.log(error);
@@ -45,7 +44,6 @@ angular.module('PrefCtrl', []).controller('PrefController', ['$scope', '$http', 
             method: 'GET',
             url: '/api/prefs/get'
         }).then(function successCallback(success) {
-            console.log(success.data);
             var location = success.data.location;
             var categories = success.data.categories;
             if (location) {

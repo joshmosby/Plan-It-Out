@@ -23,30 +23,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         }
     ];
 
-    /* var start = new Date().toISOString();
-     var end = '2117-05-02T12:00:00';
-
-     $scope.alertOnDayClick = function (date, jsEvent, view) {
-     console.log('day clicked: ' + date.format());
-     if (date.format() < end.format()) {
-     $(this).css('background-color', 'blue');
-     } else {
-
-     }
-     $http({
-     method: 'GET',
-     url: '/api/search-from-calendar',
-     headers: {
-     start: date.format(),//'2017-05-02T12:00:00',
-     end: date.format()//'2017-05-02T14:00:00'
-     }
-     }).then(function successCallback(success) {
-     console.log(success.data.events);
-     }, function errorCallback(error) {
-     console.log(error);
-     })
-     };*/
-
     var earliestTime = new Date();
     earliestTime.setHours(earliestTime.getHours() - 4);
     earliestTime = earliestTime.toISOString().substring(0, 10);
@@ -68,8 +44,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             height: 450,
             editable: true,
             header: {
-                //left: 'month basicWeek basicDay agendaWeek agendaDay',
-                //center: 'title',
                 right: 'today prev,next'
             },
             eventClick: $scope.alertEventOnClick,
@@ -86,7 +60,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             method: 'GET',
             url: '/api/prefs/get'
         }).then(function successCallback(success) {
-            console.log(success.data);
             var location = success.data.location;
             var categories = success.data.categories;
             if (location && categories) {
@@ -113,8 +86,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             return;
         }
         $scope.isError = false;
-        console.log('early: ' + earliestTime);
-        console.log('late: ' + latestTime);
         $scope.isLoading = true;
         $http({
             method: 'GET',
@@ -126,7 +97,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
                 categories: JSON.stringify(categories)
             }
         }).then(function successCallback(success) {
-            console.log(success.data.events);
             $scope.searchResults = success.data;
             if (success.data.events.length === 0) {
                 $scope.noResults = true;
@@ -139,11 +109,7 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
         })
     };
 
-    $scope.DisplayStart = function (start) {
-        return 'hi';
-    };
-
-    $scope.eventClicked = function (event) {
+    $scope.EventClicked = function (event) {
         $scope.selectedEvent = event;
         $window.open(event.url);
     };
@@ -160,7 +126,6 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
     };
 
     $scope.LoadMoreEvents = function (reload) {
-        console.log(last_date);
         $http({
             method: 'GET',
             url: '/api/google/events',
@@ -197,20 +162,17 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
 
     var insertCalendarEvent = function (summary, location, description, start, end, timezone) {
         $http({
-            method: 'GET',
+            method: 'POST',
             url: '/api/google/insert',
             headers: {
                 'summary': summary,
                 'location': location,
-                'description': '',//description.substring(0,5),
+                'description': '',
                 'start': start,
                 'end': end,
                 'timezone': timezone
             }
         }).then(function successCallback(success) {
-            // Note: could be here even if adding calendar wasn't successful.
-            // Need to check if success.data == a calendar url
-            console.log(success.data);
             if (success.data.indexOf('https://www.google.com/calendar/event') < 0) {
                 return;
             }
@@ -232,11 +194,8 @@ angular.module('CalendarCtrl', []).controller('CalendarController', ['$scope', '
             url: '/api/google/auth/token',
             headers: {'code': code}
         }).then(function successCallback(success) {
-            //var access_token = success.data.tokens.access_token;
             googleTokens = success.data.tokens;
             userId = success.data.id;
-            console.log(googleTokens);
-            console.log(userId);
             $scope.LoadMoreEvents(false);
         }, function errorCallback(error) {
             console.log(error);
